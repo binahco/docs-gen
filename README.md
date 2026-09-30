@@ -36,7 +36,7 @@ docs-gen build --in CORPUS --out SITE
   ├─ index_panel(docs)          # índice para el LLM: estadísticas REALES por ADR
   ├─ client.complete(site-digest-generator)  # tagline + blurbs, validado y sanitizado
   └─ render                     # index.md = tabla de estadísticas + narrativa
-                                # adr/<slug>.md = blurb (LLM) + cuerpo íntegro (ParsedDocument)
+                                # <slug>.md = blurb (LLM) + cuerpo íntegro (ParsedDocument)
 ```
 
 - El cuerpo de cada ADR **nunca** se reescribe ni pasa por un modelo: se vierte tal cual.

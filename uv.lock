@@ -125,7 +125,7 @@ wheels = [
 
 [[package]]
 name = "llm-dev-core"
-version = "0.10.0"
+version = "1.0.0"
 source = { editable = "../llm-dev-core" }
 dependencies = [
     { name = "fastapi" },

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -81,7 +82,7 @@ def test_render_index_usa_numeros_del_parse_y_blurb_del_digest(tmp_path: Path) -
 
     digest = SiteDigest(tagline="tag", adrs=[AdrBlurb(slug="a", title="A", blurb="blurb de a")])
     index = render_index(docs, digest, date_str="2026-10-15")
-    assert "| [a](adr/a.md) | 1 | 1 |" in index
+    assert "| [a](a.md) | 1 | 1 |" in index
     assert "blurb de a" in index
     assert "blurb de b" not in index
 
@@ -107,6 +108,23 @@ def test_build_genera_sitio_determinista_con_stub(tmp_path: Path) -> None:
     assert stub.calls == 1
     _, files2 = build(corpus, tmp_path / "out", client=build_client(StubProvider(), clock=FakeClock())["client"])
     assert files == files2  # mismo corpus + mismo LLM → mismo sitio
+
+
+def test_cada_enlace_del_index_apunta_a_un_archivo_generado(tmp_path: Path) -> None:
+    corpus = _corpus(tmp_path)
+    out = tmp_path / "out"
+    client = build_client(StubProvider(), clock=FakeClock())["client"]
+    _, files = build(corpus, out, client=client)
+    out.mkdir(parents=True, exist_ok=True)
+    for name, content in files.items():  # así escribe `docs-gen build`
+        (out / name).write_text(content)
+
+    enlaces = re.findall(r"\]\(([^)]+)\)", files["index.md"])
+    assert enlaces, "el index debe enlazar cada ADR"
+    assert sorted(enlaces) == sorted(name for name in files if name != "index.md")
+    for enlace in enlaces:
+        assert not enlace.startswith("/") and ".." not in enlace, enlace
+        assert (out / enlace).is_file(), f"enlace roto en index.md: {enlace}"
 
 
 def test_el_renderer_redacta_contenido_externo() -> None:

@@ -134,7 +134,7 @@ def render_index(docs: tuple[ParsedDocument, ...], digest: SiteDigest, *, date_s
         slug = slug_of(doc)
         blurb = next((a.blurb for a in digest.adrs if a.slug == slug), "—")
         rows.append(
-            f"| [{slug}](adr/{slug}.md) | {len(doc.sections)} | {len(doc.tables)} | ~{doc.approx_tokens} | {blurb} |"
+            f"| [{slug}]({slug}.md) | {len(doc.sections)} | {len(doc.tables)} | ~{doc.approx_tokens} | {blurb} |"
         )
     table = "\n".join(rows) or "| _sin ADRs_ | - | - | - | - |"
     return (
