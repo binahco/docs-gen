@@ -1,0 +1,24 @@
+# Manifest del consumidor. Contrato e inventario a la vez (ARCHITECTURE.md §2.1).
+week: 12
+name: docs-gen
+core_version: 0.10.0
+
+reused_modules:
+  - parser-io
+  - llm-client
+  - schema-validate
+  - test-kit
+  - secure-base
+  - cache-ratelimit
+  - ci-pack
+
+new_surface:
+  - "build: sitio de documentación desde los ADRs del core (index.md + una página por ADR)"
+  - "el cuerpo de cada ADR sale del ParsedDocument (parser-io) sin LLM; el LLM solo redacta narrativa (site-digest-v1)"
+  - "prompt site-digest-generator (tagline + blurb por ADR) nacido evaluado con dataset congelado"
+  - "render determinista: mismo corpus produce el mismo sitio excepto la narrativa validada"
+
+estimated_new_surface: 30
+
+# Presupuesto máximo de evals en USD por semana (ARCHITECTURE.md §8.1).
+eval_budget_usd: 2.0
